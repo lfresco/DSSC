@@ -1,0 +1,6 @@
+With 1 threads the result we got was 3.141593 and the time of execution was 0.207595 seconds
+With 2 threads the result we got was 3.141593 and the time of execution was 0.100652 seconds
+With 4 threads the result we got was 3.141593 and the time of execution was 0.052110 seconds
+With 8 threads the result we got was 3.141593 and the time of execution was 0.029262 seconds
+With 16 threads the result we got was 3.141593 and the time of execution was 0.075428 seconds
+With 20 threads the result we got was 3.141593 and the time of execution was 0.036552 seconds
