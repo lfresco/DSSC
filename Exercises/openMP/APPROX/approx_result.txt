@@ -1,6 +1,24 @@
-With 1 threads the result we got was 3.141593 and the time of execution was 0.207595 seconds
-With 2 threads the result we got was 3.141593 and the time of execution was 0.100652 seconds
-With 4 threads the result we got was 3.141593 and the time of execution was 0.052110 seconds
-With 8 threads the result we got was 3.141593 and the time of execution was 0.029262 seconds
-With 16 threads the result we got was 3.141593 and the time of execution was 0.075428 seconds
-With 20 threads the result we got was 3.141593 and the time of execution was 0.036552 seconds
+With 1 threads the result we got was 3.141593 and the time of execution was 0.207941 seconds
+With 2 threads the result we got was 3.141593 and the time of execution was 0.100826 seconds
+With 4 threads the result we got was 3.141593 and the time of execution was 0.052808 seconds
+With 8 threads the result we got was 3.141593 and the time of execution was 0.028997 seconds
+With 16 threads the result we got was 3.141593 and the time of execution was 0.063931 seconds
+With 20 threads the result we got was 3.141593 and the time of execution was 0.047837 seconds
+
+---------------------------------------------------------------------------------------
+With 1 threads the result we got was 3.141593 and the time of execution was 0.212780 seconds
+With 2 threads the result we got was 3.141593 and the time of execution was 0.100560 seconds
+With 4 threads the result we got was 3.141593 and the time of execution was 0.052600 seconds
+With 8 threads the result we got was 3.141593 and the time of execution was 0.028773 seconds
+With 16 threads the result we got was 3.141593 and the time of execution was 0.044374 seconds
+With 20 threads the result we got was 3.141593 and the time of execution was 0.130214 seconds
+
+-------------------------------------------------------------------------------------------------
+
+
+With 1 threads the result we got was 3.141593 and the time of execution was 0.199375 seconds
+With 2 threads the result we got was 3.141593 and the time of execution was 0.101149 seconds
+With 4 threads the result we got was 3.141593 and the time of execution was 0.052721 seconds
+With 8 threads the result we got was 3.141593 and the time of execution was 0.033380 seconds
+With 16 threads the result we got was 3.141593 and the time of execution was 0.032864 seconds
+With 20 threads the result we got was 3.141593 and the time of execution was 0.040562 seconds

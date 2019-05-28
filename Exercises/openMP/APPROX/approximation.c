@@ -67,7 +67,7 @@ int main(){
   
   double t0 = omp_get_wtime(); 
 
-#pragma omp parallel
+#pragma omp parallel reduction(+:global_result)
 {
   double h = (b - a)*(1.0/N);
   int thread_id = omp_get_thread_num();
@@ -80,7 +80,7 @@ int main(){
   double local_result = local_sum(local_a, local_b, local_n, h);
 
 
-  #pragma omp atomic
+ 
   global_result += local_result;
 }
   double t1  = omp_get_wtime();
