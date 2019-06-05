@@ -2,25 +2,19 @@
 #include <math.h>
 #include <stdlib.h>
 
-const int TILE_SIZE = 2;
-const int N_ROWS = 1;
+const int TILE_SIZE = 32;
+const int N_ROWS = 8;
 #define N_TEST 1
 
 __global__ void naive_transpose(const float * A, float * B, int size)
 { 
-  /**
-  int x = blockIdx.x * TILE_SIZE + threadIdx.x;
-  int y = blockIdx.y * TILE_SIZE + threadIdx.y;
-  int start = gridDim.x * TILE_SIZE;
-  
-  int j;
-  for(j = 0; j < TILE_SIZE; j += N_ROWS)
-    B[x * start + (y + j)] = A[(y + j)* start + x]; 
-*/
- int row = blockIdx.x * blockDim.x + threadIdx.x;
- int col = blockIdx.y * blockDim.y + threadIdx.y;
+
+
+ int index = threadIdx.x + blockIdx.x * blockDim.x;
+ int x = index % size;
+ int y = index / size;
  
- B[col * size + row] = A[row * size + col]; 
+ B[y * size + x] = A[x * size + y]; 
 } 
 
 
