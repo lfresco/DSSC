@@ -2,8 +2,8 @@
 #include <math.h>
 #include <stdlib.h>
 
-const int TILE_SIZE = 8;
-const int N_ROWS = 4;
+const int TILE_SIZE = 2;
+const int N_ROWS = 1;
 #define N_TEST 1
 
 __global__ void naive_transpose(const float * A, float * B, int size)
@@ -26,7 +26,7 @@ __global__ void naive_transpose(const float * A, float * B, int size)
 
 __global__ void fast_transpose(const float * A, float * B, const int size)
 {
-  __shared__ float tile[TILE_SIZE][TILE_SIZE];
+  __shared__ float tile[TILE_SIZE][TILE_SIZE + 1];
   /**int x = blockIdx.x * TILE_SIZE + threadIdx.x;
   int y = blockIdx.y * TILE_SIZE + threadIdx.y;
   int start = gridDim.x * TILE_SIZE;
@@ -98,7 +98,7 @@ void print_matrix(const float * A, const int N)
 
 int main(int argc, char * argv[])
 {
-  const int N = 16;
+  const int N = 8192;
   
   const int size = N * N * sizeof(float);
 
@@ -119,8 +119,8 @@ int main(int argc, char * argv[])
   fill_host(host_a, N);
   cpu_transpose(host_a, host_control, N);  
     
-  print_matrix(host_a, N);
-  print_matrix(host_control, N);
+  //print_matrix(host_a, N);
+  //print_matrix(host_control, N);
 
   cudaMemcpy(device_a, host_a, size, cudaMemcpyHostToDevice);
 
@@ -139,13 +139,13 @@ int main(int argc, char * argv[])
   cudaEventElapsedTime(&ms, begin, end);
   cudaMemcpy(host_naive, device_naive, size, cudaMemcpyDeviceToHost);
   
-  print_matrix(host_naive, N);
+  //print_matrix(host_naive, N);
 
-  //int correctness = is_transpose(host_control, host_naive, nx , ny);
   
-  //printf("Correctness Test : %d\n", is_transpose(host_control, host_naive, nx, ny));
+   
+  printf("Correctness Test : %d\n", is_transpose(host_control, host_naive, N));
   
-  //printf("Required time : %f\n", ms);
+  printf("Required time : %f\n", ms);
   
   cudaEventRecord(begin, 0);
   fast_transpose<<< dimGrid, dimBlock >>>(device_a, device_fast, N);
@@ -154,8 +154,9 @@ int main(int argc, char * argv[])
   cudaEventElapsedTime(&ms, begin, end);
   cudaMemcpy(host_fast, device_fast, size, cudaMemcpyDeviceToHost);
   
-  print_matrix(host_fast, N);  
-  
+  //print_matrix(host_fast, N);  
+  printf("Correctness Test : %d\n", is_transpose(host_control, host_fast, N));
+  printf("Required Time : %f\n",ms);
 
   cudaEventDestroy(begin);
   cudaEventDestroy(end);
