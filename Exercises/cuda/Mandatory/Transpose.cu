@@ -2,8 +2,8 @@
 #include <math.h>
 #include <stdlib.h>
 
-const int TILE_SIZE = 32;
-const int N_ROWS = 8;
+const int TILE_SIZE = 8;
+const int N_ROWS = 4;
 #define N_TEST 1
 
 __global__ void naive_transpose(const float * A, float * B, int size)
@@ -21,22 +21,7 @@ __global__ void naive_transpose(const float * A, float * B, int size)
 __global__ void fast_transpose(const float * A, float * B, const int size)
 {
   __shared__ float tile[TILE_SIZE][TILE_SIZE + 1];
-  /**int x = blockIdx.x * TILE_SIZE + threadIdx.x;
-  int y = blockIdx.y * TILE_SIZE + threadIdx.y;
-  int start = gridDim.x * TILE_SIZE;
-
-  int j;
-  for(j = 0; j < TILE_SIZE; j+= N_ROWS)
-    tile[threadIdx.y + j][threadIdx.x] = A[(y + j)*start + x];
-
-  __syncthreads();
-
-  x = blockIdx.y * TILE_SIZE + threadIdx.x;
-  y = blockIdx.x * TILE_SIZE + threadIdx.y;
-
-  for(j = 0; j < TILE_SIZE; j += N_ROWS)
-    B[(y + j)*start + x] = tile[threadIdx.x][threadIdx.y + j];
-  */
+ 
  int col = blockIdx.x * blockDim.x + threadIdx.x;
  int row = blockIdx.y * blockDim.y + threadIdx.y;
  tile[threadIdx.x][threadIdx.y] = A[row * size + col];

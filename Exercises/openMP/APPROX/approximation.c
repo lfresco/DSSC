@@ -53,47 +53,141 @@ double local_sum(double local_a, double local_b, int local_n, double h )
 }
 
 
+/**
+ * @brief Function that performs the approximation using the critical keyword
+ *
+ * @param int N, problem size
+ *
+ *
+ *
+ */
 
-
-
-int main(){
-
-  long int N = 100000000;
-  double global_result = 0.0;
+double critical(int N)
+{
+  double pi_approx = 0.0;
   int b = 1;
   int a = 0;
   
-  int global_threads;  
-  
-  double t0 = omp_get_wtime(); 
 
-#pragma omp parallel reduction(+:global_result)
+  #pragma omp parallel 
+  {
+    double h = (b - a) * (1.0 / N);
+    int thread_id = omp_get_thread_num();
+    int n_threads = omp_get_num_threads();
+    
+    int local_n = N/n_threads;
+    
+    double local_a = a + thread_id * local_n * h;
+    double local_b = local_a + local_n * h;
+    
+    double local_result = local_sum(local_a, local_b, local_n, h);
+    
+    #pragma omp critical
+    pi_approx += local_result;
+
+  }
+  
+  return pi_approx;
+}
+
+/**
+ *@brief Computes parallel approximation of Pi using the reduction keyword
+ *
+ *@param int N, the problem size (number of sub intervals)
+ *
+ */
+
+double reduction(int N)
 {
-  double h = (b - a)*(1.0/N);
+  double pi_approx = 0.0;
+  double b = 1.0;
+  double a = 0.0;
+  int n_threads;
+#pragma omp parallel reduction(+:pi_approx)
+{
+  double h = (b - a) * (1.0 / N);
   int thread_id = omp_get_thread_num();
-  int n_threads = omp_get_num_threads();
-  global_threads = n_threads;
+  n_threads = omp_get_num_threads();
+  
   int local_n = N/n_threads;
   double local_a = a + thread_id * local_n * h;
   double local_b = local_a + local_n * h;
 
   double local_result = local_sum(local_a, local_b, local_n, h);
+  
+  pi_approx += local_result;
 
-
- 
-  global_result += local_result;
+  
 }
-  double t1  = omp_get_wtime();
+return pi_approx;
+}
 
+
+/**
+ *@brief Computes parallel approximation of Pi by using the atomic keyword
+ *
+ *@param int N, the problem size (number of subintervals)
+ *
+ *
+ */
+double atomic(int N)
+{
+  double a = 0.0;
+  double b = 1.0;
+  int n_threads;
+  double pi_approx = 0.0;
+
+#pragma omp parallel
+{
+  double h = (b - a) * (1.0 / N);
+  int thread_id = omp_get_thread_num();
+  n_threads = omp_get_num_threads();
+  int local_n = N / n_threads;
  
- printf("With %i threads the result we got was %lf and the time of execution was %lf seconds\n", global_threads, global_result, t1 - t0 );
- 
+  double local_a = a + thread_id * local_n * h;
+  double local_b = local_a + local_n * h;
+
+  double local_result = local_sum(local_a, local_b, local_n, h);
+
+#pragma omp atomic
+  pi_approx += local_result;
+}
+
+return pi_approx;
+}
 
 
+int main(){
 
+  int N = 1000000000;
+  double pi_approx;
+  
+  double start = omp_get_wtime();
+  pi_approx = critical(N);
+  double end = omp_get_wtime();
 
+  printf("Critical keyword\n");
+  printf("Value of pi : %f \n", pi_approx);
+  printf("Execution time : %f \n", end - start);
+  printf("------------------------------\n");
 
+  start = omp_get_wtime();
+  pi_approx = atomic(N);
+  end = omp_get_wtime();
 
+  printf("Atomic ketyword\n");
+  printf("Value of pi : %f \n", pi_approx);
+  printf("Execution time : %f \n", end- start);
+  printf("------------------------------\n");
 
+  start = omp_get_wtime();
+  pi_approx = reduction(N);
+  end = omp_get_wtime();
+
+  printf("Reduction keyword");
+  printf("Value of Pi : %f \n", pi_approx);
+  printf("Execution time : %f \n", end - start);
+  printf("------------------------------\n");
+  
   return 0;
 }
